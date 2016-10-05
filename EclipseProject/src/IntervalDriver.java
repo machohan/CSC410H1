@@ -46,9 +46,11 @@ class OpenInterval{
     }
 
     // Creates an empty interval.
-	//ADD CONTRACTS #TODO
-	/*@ requires x != null && x == integer;
-	  @ ensures low == high;
+    // #TODO Problem 1.a ADD CONTRACTS
+    /*@ requires (* x is an integer *);
+	  @ ensures this.low == x;
+	  @ ensures this.high == x;
+	  @ ensures this.low == this.high;
 	  @*/
     public OpenInterval(int x){
 	this.low = x;
