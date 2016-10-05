@@ -33,8 +33,8 @@ class OpenInterval{
     //@ invariant low <= high;
 
     // Creates an non-empty interval.
-	// #TODO Problem 1.a ADD CONTRACTS
-	/*@ requires low < high;
+	// #TODO Problem 1.a ADD CONTRACT
+	/*@ requires low <= high;
 	  @ requires (* low is an integer *);
 	  @ requires (* high is an integer *);
 	  @ ensures this.low == low;
@@ -46,7 +46,7 @@ class OpenInterval{
     }
 
     // Creates an empty interval.
-    // #TODO Problem 1.a ADD CONTRACTS
+    // #TODO Problem 1.a ADD CONTRACT
     /*@ requires (* x is an integer *);
 	  @ ensures this.low == x;
 	  @ ensures this.high == x;
@@ -58,29 +58,32 @@ class OpenInterval{
     }	
      
     // Returns lower bound.
-	//ADD CONTRACTS #TODO
+    // #TODO Problem 1.b ADD CONTRACT
 	/*@ requires this != null;
-	  @	ensures \result != null;
+	  @ requires this.low <= this.high;
+	  @	ensures (* \result is an integer *);
 	  @*/
     public int getLow(){
 	return this.low;
     }
 
     // Returns upper bound.
-	//ADD CONTRACTS #TODO
-	/*@ requires this != null;
-	  @ ensures \result != null;
+    // #TODO Problem 1.b ADD CONTRACT
+    /*@ requires this != null;
+	  @ requires this.high >= this.low;
+	  @	ensures (* \result is an integer *);
 	  @*/
     public int getHigh(){
 	return this.high;
     }
 
     //@ requires x != null;
-	//Complete CONTRACTS #TODO
-	/*@ ensures \result == true || \result == false;
-	  @ requires x != null;
-	  @ requires x.low != null && x.high != null;
+    // #TODO Problem 1.c ADD CONTRACT
+	/*@ requires x != null;
+	  @ requires (* x.low is an integer *);
+	  @ requires (* x.high is an integer *);
 	  @ requires \typeof(x) == \typeof(this);
+	  @ ensures \result == true || \result == false;
 	  @*/
     public /*@ pure */ boolean equals(OpenInterval x){
 	return (this.low == x.low && this.high == x.high);
