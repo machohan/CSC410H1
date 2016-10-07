@@ -34,8 +34,11 @@ class OpenInterval{
 
     // Creates an non-empty interval.
 	// ADD CONTRACTS #TODO
-	  /*@ requires low < high;
-	    @*/
+        /*@ requires low <= high;
+	  @ ensures this.low <= this.high;
+	  @ ensures this.low == low;
+	  @ ensures this.high == high;
+	  @*/
     public OpenInterval(int low, int high){
 	this.low = low;
 	this.high = high;
@@ -43,8 +46,10 @@ class OpenInterval{
 
     // Creates an empty interval.
 	//ADD CONTRACTS #TODO
-	/*@ ensures low == high;
-	  @*/
+	/*@ ensures this.low == x;
+          @ ensures this.high == x;
+          @ ensures this.low == this.high;
+          @*/
     public OpenInterval(int x){
 	this.low = x;
 	this.high = x;
@@ -52,25 +57,24 @@ class OpenInterval{
      
     // Returns lower bound.
 	//ADD CONTRACTS #TODO
-	/*@ requires this != null;
-	  @*/
+	//@ requires this != null;
+	//@ ensures \result == this.low;
     public int getLow(){
 	return this.low;
     }
 
     // Returns upper bound.
 	//ADD CONTRACTS #TODO
-	/*@ requires this != null;
-	  @*/
+	//@ requires this != null;
+	//@ ensures \result == this.high;
     public int getHigh(){
 	return this.high;
     }
 
     //@ requires x != null;
 	//Complete CONTRACTS #TODO
-	/*@ ensures \result;
-	  @ requires \typeof(x) == \typeof(this);
-	  @*/
+	//@ requires this != null;
+	//@ ensures (this.low == x.low && this.high == x.high) ==> \result;
     public /*@ pure */ boolean equals(OpenInterval x){
 	return (this.low == x.low && this.high == x.high);
     }
