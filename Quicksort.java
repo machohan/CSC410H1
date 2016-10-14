@@ -19,12 +19,12 @@ public class Quicksort {
 
     /*@ assignable \nothing;
       @ requires a != null;
-      @ requires start >= 0 && start <= a.length;
-      @ requires stop >= 0 && stop <= a.length;
+      @ requires start >= 0;
+      @ requires stop >= 0;
+      @ requires start <= a.length;
+      @ requires stop <= a.length;
       @ modifies a[*];
       @ ensures \old(a.length) == a.length;
-      @ ensures (\sum int i; i >= 0 && i < a.length; a[i]) ==
-	(\sum int j; j >= 0 && j < \old(a.length); \old(a[j]));
       @*/
     private static void quicksort(int[] a, int start, int stop, int ulimit, int llimit)
     {
@@ -38,14 +38,13 @@ public class Quicksort {
     /*@ assignable \nothing;
       @ requires a != null;
       @ requires start >= 0;
-      @ requires stop >= start + 2;
+      @ requires stop - start > 1;
       @ requires start <= a.length;
       @ requires stop <= a.length;
       @ modifies a[*];
-      @ ensures 0 <= start && start <= a.length;
-      @ ensures 0 <= stop && stop <= a.length;
       @ ensures \old(a.length) == a.length;
-      @ ensures \result >= 0 && \result < a.length;
+      @ ensures \result >= 0;
+      @ ensures \result <= stop - 1;
       @*/
     private static int pivot(int[] a, int start, int stop, int ulimit, int llimit)
     {
@@ -57,16 +56,14 @@ public class Quicksort {
 
     /*@ assignable \nothing;
       @ requires a != null;
-      @ requires start >= 1;
-      @ requires stop >= 1;
-      @ requires start <= a.length;
+      @ requires start >= 0;
+      @ requires stop >= 0;
+      @ requires start <= stop;
       @ requires stop <= a.length;
       @ modifies a[*];
       @ ensures \old(a.length) == a.length;
-      @ ensures 0 <= start && start <= a.length;
-      @ ensures 0 <= stop && stop <= a.length;
-      @ ensures \result >= 0 && \result < a.length;
-      @ ensures a[start] <= a[stop];
+      @ ensures \result >= start - 1;
+      @ ensures \result <= stop - 1;
       @ */
     private static int partition(int[] a, int pivot, int start, int stop, int ulimit, int llimit)
     {
