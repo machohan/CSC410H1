@@ -1,23 +1,31 @@
 public class Quicksort {
 
     // Write formal pre- and post-conditions for this method.
-	/*@ normal_behavior
-	  @ requires a != null;
-	  @ ensures (\forall int i; i>=0 && i<a.length; (\exists int j; j>=0 && j<\old(a.length); a[i] == \old(a[j]) ));
-	  @ ensures (\forall int i; i>=0 && i<(a.length-1); a[i] <= a[i+1] );
-	  @ ensures (\sum int i; i>=0 && i<a.length; a[i]) == (\sum int j; j>=0 && j<\old(a.length); \old(a[j]));
-	  @ ensures a.length == \old(a.length);
-	  @*/
+    /*@ assignable \nothing;
+      @ requires a != null;
+      @ requires a.length >= 0;
+      @ modifies a[*];
+      @ ensures \old(a.length) == a.length;
+      @ ensures (\forall int i; i >= 0 && i < a.length; (\exists int j; j >=0 &&
+	j < a.length; \old(a[i]) == a[j]));
+      @ ensures (\forall int i; i>=0 && i<(a.length-1); a[i] <= a[i+1] );
+      @ ensures (\sum int i; i >= 0 && i < a.length; a[i]) ==
+	(\sum int j; j >= 0 && j < \old(a.length); \old(a[j]));
+      @*/
     public static void sort(int[] a, int ulimit, int llimit)
     {
         quicksort(a, 0, a.length, ulimit, llimit);
     }
 
-    // Write pre-conditions for this method.
-    // Write post-conditions for this method.
-	/*@ modifies a[*];
-	  @ 
-	  @*/
+    /*@ assignable \nothing;
+      @ requires a != null;
+      @ requires start >= 0;
+      @ requires stop >= 0;
+      @ requires start <= a.length;
+      @ requires stop <= a.length;
+      @ modifies a[*];
+      @ ensures \old(a.length) == a.length;
+      @*/
     private static void quicksort(int[] a, int start, int stop, int ulimit, int llimit)
     {
         if (stop - start > 1) {
@@ -27,14 +35,17 @@ public class Quicksort {
         }
     }
 
-    // Write pre-conditions for this method.
-    // Write post-conditions for this method.
-	/*@ modifies a[*];
-	  @ requires a != null;
-	  @ requires stop >=0 && stop < a.length;
-	  @ requires start >= 0 && start < a.length;
-	  @ ensures p>=0 && p<a.length;
-	  @*/
+    /*@ assignable \nothing;
+      @ requires a != null;
+      @ requires start >= 0;
+      @ requires stop - start > 1;
+      @ requires start <= a.length;
+      @ requires stop <= a.length;
+      @ modifies a[*];
+      @ ensures \old(a.length) == a.length;
+      @ ensures \result >= 0;
+      @ ensures \result <= stop - 1;
+      @*/
     private static int pivot(int[] a, int start, int stop, int ulimit, int llimit)
     {
         int p = partition(a, a[start], start+1, stop, ulimit, llimit);
@@ -43,13 +54,17 @@ public class Quicksort {
         return p;
     }
 
-    // Write pre-conditions for this method.
-    // Write post-conditions for this method.
-	/*@ modifies a[*];
-	  @ requires a != null;
-	  @ requires stop >=0 && stop < a.length;
-	  @ requires start >= 0 && start < a.length; 
-	  @*/
+    /*@ assignable \nothing;
+      @ requires a != null;
+      @ requires start >= 0;
+      @ requires stop >= 0;
+      @ requires start <= stop;
+      @ requires stop <= a.length;
+      @ modifies a[*];
+      @ ensures \old(a.length) == a.length;
+      @ ensures \result >= start - 1;
+      @ ensures \result <= stop - 1;
+      @ */
     private static int partition(int[] a, int pivot, int start, int stop, int ulimit, int llimit)
     {
         if (start >= stop) 
