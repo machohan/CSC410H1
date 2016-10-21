@@ -2,7 +2,6 @@ public class Quicksort {
 
     // Write formal pre- and post-conditions for this method.
 	/*@ normal_behavior
-	  @ assignable \nothing;
 	  @ requires a != null;
 	  @ ensures (\forall int i; i>=0 && i<a.length; (\exists int j; j>=0 && j<\old(a.length); a[i] == \old(a[j]) ));
 	  @ ensures (\forall int i; i>=0 && i<(a.length-1); a[i] <= a[i+1] );
@@ -15,9 +14,10 @@ public class Quicksort {
     }
 
     // Write pre-conditions for this method.
-    //@ modifies a[*];
     // Write post-conditions for this method.
-	//has to have stop -start > 1
+	/*@ modifies a[*];
+	  @ 
+	  @*/
     private static void quicksort(int[] a, int start, int stop, int ulimit, int llimit)
     {
         if (stop - start > 1) {
@@ -28,11 +28,12 @@ public class Quicksort {
     }
 
     // Write pre-conditions for this method.
-    //@ modifies a[*];
     // Write post-conditions for this method.
-	/*@ requires a != null;
+	/*@ modifies a[*];
+	  @ requires a != null;
 	  @ requires stop >=0 && stop < a.length;
 	  @ requires start >= 0 && start < a.length;
+	  @ ensures p>=0 && p<a.length;
 	  @*/
     private static int pivot(int[] a, int start, int stop, int ulimit, int llimit)
     {
@@ -43,9 +44,9 @@ public class Quicksort {
     }
 
     // Write pre-conditions for this method.
-    //@ modifies a[*];
     // Write post-conditions for this method.
-	/*@ requires a != null;
+	/*@ modifies a[*];
+	  @ requires a != null;
 	  @ requires stop >=0 && stop < a.length;
 	  @ requires start >= 0 && start < a.length; 
 	  @*/
