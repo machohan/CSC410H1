@@ -4,13 +4,12 @@ public class Quicksort {
     /*@ assignable \nothing;
       @ requires a != null;
       @ requires a.length >= 0;
+	  @ requires llimit == a[0];
+	  @ requires ulimit == a[a.length-1];
       @ modifies a[*];
       @ ensures \old(a.length) == a.length;
-      @ ensures (\forall int i; i >= 0 && i < a.length; (\exists int j; j >=0 &&
-	j < a.length; \old(a[i]) == a[j]));
-      @ ensures (\forall int i; i>=0 && i<(a.length-1); a[i] <= a[i+1] );
-      @ ensures (\sum int i; i >= 0 && i < a.length; a[i]) ==
-	(\sum int j; j >= 0 && j < \old(a.length); \old(a[j]));
+	  @ ensures a != null;
+      @ ensures (\forall int i; i >= 0 && i < (a.length-1); a[i] <= a[i+1] );
       @*/
     public static void sort(int[] a, int ulimit, int llimit)
     {
@@ -25,7 +24,8 @@ public class Quicksort {
       @ requires stop <= a.length;
       @ modifies a[*];
       @ ensures \old(a.length) == a.length;
-      @*/
+      @ ensures a != null;
+	  @*/
     private static void quicksort(int[] a, int start, int stop, int ulimit, int llimit)
     {
         if (stop - start > 1) {
@@ -45,6 +45,7 @@ public class Quicksort {
       @ ensures \old(a.length) == a.length;
       @ ensures \result >= 0;
       @ ensures \result <= stop - 1;
+	  @ ensures a != null;
       @*/
     private static int pivot(int[] a, int start, int stop, int ulimit, int llimit)
     {
@@ -64,19 +65,25 @@ public class Quicksort {
       @ ensures \old(a.length) == a.length;
       @ ensures \result >= start - 1;
       @ ensures \result <= stop - 1;
+	  @ ensures a != null;
       @ */
     private static int partition(int[] a, int pivot, int start, int stop, int ulimit, int llimit)
     {
         if (start >= stop) 
             return start - 1;
-        if (a[start] < pivot)
+        
+		if (a[start] < pivot)
             return partition(a, pivot, start + 1, stop, ulimit, llimit);
+		
         if (a[--stop] > pivot)
             return partition(a, pivot, start, stop, ulimit, llimit);
-        if (start < stop) {
+        
+		if (start < stop) {
             swap(a, start, stop);
             return partition(a, pivot, start+1, stop, ulimit, llimit);
-        } else
+        } 
+		
+		else
             return start;
     }
 
@@ -85,6 +92,7 @@ public class Quicksort {
       @ requires 0 <= j && j < a.length;
       @ modifies a[i], a[j];
       @ ensures a[i] == \old(a[j]) && a[j] == \old(a[i]);
+	  @ ensures a != null;
       @*/
     public static void swap(int[] a, int i, int j)
     {

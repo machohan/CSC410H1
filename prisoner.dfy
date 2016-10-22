@@ -1,4 +1,6 @@
+
 method benda(L:array<int>, v0:int, v1:int) returns (x:int, y:int)
+  // Do no change these.
   requires L != null;
   requires forall i::0 <= i < L.Length ==> 0 <= L[i] < L.Length; // in range
   requires forall i,j::0 <= i < j < L.Length ==> L[i] != L[j]; // distinct
@@ -10,8 +12,10 @@ method benda(L:array<int>, v0:int, v1:int) returns (x:int, y:int)
   var i;
   i,x,y := 0,v0,v1;
   while (i < L.Length)
+  
     // You must provide appropriate loop invariants here
-	invariant //no pair of bodies are switching minds twice
+	invariant forall j::i <= j < x ==> i <= L[j] < x;
+	
     {       
     if (L[i] != i) { // if mind of i does not match with body i
       x,L[i] := L[i],x; // swap mind between i and x
@@ -32,8 +36,19 @@ method benda(L:array<int>, v0:int, v1:int) returns (x:int, y:int)
 }
 
 method cycle(L:array<int>, i:int, a:int, s:set<int>) returns (x:int)
+  
+  // You must provide appropriate pre-conditions here.
   modifies L;
-  decreases s; 
+  decreases s;
+  requires L != null;
+  requires i >=0;
+  requires i < L.Length;
+  requires s == (set z | i < z < L.Length && L[z] != z);
+   
+  // You must provide appropriate post-conditions here.
+  ensures x >=0;
+  ensures x < L.Length;
+  ensures (L[x] != i) ==> (L[x] == x);
 { 
   x := a;
   if (L[x] != i) { // mind and body do not match.
