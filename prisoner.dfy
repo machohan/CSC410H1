@@ -27,15 +27,17 @@ method benda(L:array<int>, v0:int, v1:int) returns (x:int, y:int)
   while (i < L.Length)
     // You must provide appropriate loop invariants here
 	invariant L != null;
-	invariant i <= L.Length;
+	invariant 0 <= i <= L.Length;
 	invariant forall j::i <= j < L.Length && L[j] == j ==> i <= L[j] < L.Length;
+	invariant forall j :: 0 <= j < i ==> L[j] == j;
 	invariant x !in L[..] && y !in L[..] && x != y;
 	invariant y == v0 ==> x == v1;
 	invariant x == v0 ==> y == v1;
+	invariant i < L.Length ==> {i} + (set z | i < z < L.Length) == (set z | i < z < L.Length);
+	
     {       
     if (L[i] != i) { // if mind of i does not match with body i
       x,L[i] := L[i],x; // swap mind between i and x
-      assert x > i && x < L.Length;
       // Uses x and y to help swap one cycle back to identity without 
       // swapping (x,y).
       // Detailed explainations can be found at: 
@@ -61,19 +63,17 @@ method cycle(L:array<int>, i:int, a:int, s:set<int>) returns (x:int)
   // You must provide appropriate pre-conditions here.
   requires L != null;
   requires i < L.Length;
-  requires i >= 0;
+  requires i >= 0 && i < L.Length;
   requires L[i] != i;
-  requires a < L.Length;
-  requires a >= 0;
+  requires s != {} ==> i in s;
+  requires a > i && a < L.Length;
+  requires {i} + (set z | i < z < L.Length) == (set z | i < z < L.Length);
   requires s == (set z | i < z < L.Length && L[z] != z);
-  requires {i} <= s;
-  requires forall j::i <= j < L.Length ==> 0 <= L[j] < L.Length;
   modifies L;
   decreases s; 
   // You must provide appropriate post-conditions here.
-  ensures x < L.Length && x >= 0 && L[x] == i;  
+  ensures x < L.Length && x > i && L[x] == i;
   ensures (L[x] != i) ==> s == s-{a};
-  ensures x in s;
   ensures (s-{a} == {}) ==> L[x] == i;
 { 
   x := a;
