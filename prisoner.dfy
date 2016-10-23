@@ -14,9 +14,9 @@ method benda(L:array<int>, v0:int, v1:int) returns (x:int, y:int)
   while (i < L.Length)
   
     // You must provide appropriate loop invariants here
+	invariant L != null;
 	invariant i <= L.Length;
 	invariant forall j::i <= j < L.Length && L[j] == j ==> i <= L[j] < L.Length;
-	
     {
     if (L[i] != i) { // if mind of i does not match with body i
       x,L[i] := L[i],x; // swap mind between i and x
@@ -43,10 +43,11 @@ method cycle(L:array<int>, i:int, a:int, s:set<int>) returns (x:int)
   requires L != null;
   requires i >=0;
   requires i < L.Length;
-  requires a in s;
   decreases s;
   requires s == (set z | i < z < L.Length && L[z] != z);
-   
+  requires a in s && 0 <= a < L.Length ==> L[a] != a;
+  //requires a in s;
+  
   // You must provide appropriate post-conditions here.
   //The purpose of cycle is to put x into its original body (and also for others in the same cycle). @224
   ensures x >=0;
