@@ -1,3 +1,16 @@
+// The Prisoner of Benda
+//
+// The array L represents a permutation of the minds of the crew, where index i
+// is body i and contains mind L[i]. Without loss of generality (since an 
+// invertable data transformer exists for any list), assume that minds and
+// bodies are numbered 0 through L.Length. So originally body i had mind i.
+//
+// Prove that the following algorithm correctly switches everyone back,
+// including the two extra bodies.
+//
+// The algorithm is outlined at:
+//
+//   https://en.wikipedia.org/wiki/The_Prisoner_of_Benda
 
 method benda(L:array<int>, v0:int, v1:int) returns (x:int, y:int)
   // Do no change these.
@@ -12,15 +25,24 @@ method benda(L:array<int>, v0:int, v1:int) returns (x:int, y:int)
   var i;
   i,x,y := 0,v0,v1;
   while (i < L.Length)
-  
     // You must provide appropriate loop invariants here
 	invariant L != null;
-	invariant i <= L.Length;
+	invariant 0 <= i <= L.Length;
 	invariant forall j::i <= j < L.Length && L[j] == j ==> i <= L[j] < L.Length;
-    {
+	invariant forall j :: 0 <= j < i ==> L[j] == j;
+	invariant x !in L[..] && y !in L[..] && x != y;
+	invariant y == v0 ==> x == v1;
+	invariant x == v0 ==> y == v1;
+	invariant i >= L.Length ==> (x == v0 && y == v1);
+	invariant i < L.Length ==> {i} + (set z | i < z < L.Length) == (set z | i < z < L.Length);
+	
+    {       
     if (L[i] != i) { // if mind of i does not match with body i
       x,L[i] := L[i],x; // swap mind between i and x
-	  
+      // Uses x and y to help swap one cycle back to identity without 
+      // swapping (x,y).
+      // Detailed explainations can be found at: 
+      // https://en.wikipedia.org/wiki/The_Prisoner_of_Benda (The proof).
       x := cycle(L,i,x,(set z | i < z < L.Length && L[z] != z));
 
       y,L[x] := L[x],y; // swap minds between y and x
@@ -33,28 +55,27 @@ method benda(L:array<int>, v0:int, v1:int) returns (x:int, y:int)
   // If the two extras are switched at the end, switch back.
   if (x != v0) {
     x,y := y,x;
-  } 
+  }
 }
 
+// Put a cycle permutation back to identity permutation.
+// https://en.wikipedia.org/wiki/Cyclic_permutation
 method cycle(L:array<int>, i:int, a:int, s:set<int>) returns (x:int)
-  
   // You must provide appropriate pre-conditions here.
-  modifies L;
   requires L != null;
-  requires i >=0;
   requires i < L.Length;
-  decreases s;
+  requires i >= 0 && i < L.Length;
+  requires L[i] != i;
+  requires s != {} ==> i in s;
+  requires a > i && a < L.Length;
+  requires {i} + (set z | i < z < L.Length) == (set z | i < z < L.Length);
   requires s == (set z | i < z < L.Length && L[z] != z);
-  requires a in s && 0 <= a < L.Length ==> L[a] != a;
-  //requires a in s;
-  
+  modifies L;
+  decreases s; 
   // You must provide appropriate post-conditions here.
-  //The purpose of cycle is to put x into its original body (and also for others in the same cycle). @224
-  ensures x >=0;
-  ensures x < L.Length;
-  ensures (L[x] != i) ==> (L[x] == x);
-  ensures (L[x] != i) ==> s != old(s);
+  ensures x < L.Length && x > i && L[x] == i;
   ensures (L[x] != i) ==> s == s-{a};
+  ensures (s-{a} == {}) ==> L[x] == i;
 { 
   x := a;
   if (L[x] != i) { // mind and body do not match.
