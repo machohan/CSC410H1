@@ -14,17 +14,10 @@ method benda(L:array<int>, v0:int, v1:int) returns (x:int, y:int)
   while (i < L.Length)
   
     // You must provide appropriate loop invariants here
-	// For each loop executed, one disjoint cycle is solved. <-- Self Noted
-	// After each loop executed, values of array L are same. <-- Self Noted
-	// invariant forall j::0 <= j < L.Length ==> 0 <= L[j] < L.Length;
-	// Two extra bodies have not swapped their minds in the loop directly. <-- Self Noted
-	// invariant x != v1 && y != v0;
-	// invariant can be related to set z
-	// The following invariant below is given on piazza on post @230
-	// invariant forall j::i <= j < L.Length ==> i <= L[j] < L.Length;
-	invariant forall j::i < j < L.Length ==> i <= L[j] < L.Length;
+	invariant i <= L.Length;
+	invariant forall j::i <= j < L.Length && L[j] == j ==> i <= L[j] < L.Length;
 	
-    {       
+    {
     if (L[i] != i) { // if mind of i does not match with body i
       x,L[i] := L[i],x; // swap mind between i and x
 	  
@@ -55,9 +48,10 @@ method cycle(L:array<int>, i:int, a:int, s:set<int>) returns (x:int)
   requires s == (set z | i < z < L.Length && L[z] != z);
    
   // You must provide appropriate post-conditions here.
+  //The purpose of cycle is to put x into its original body (and also for others in the same cycle). @224
   ensures x >=0;
   ensures x < L.Length;
-  ensures (L[x] != i) ==> (L[x] != x);
+  ensures (L[x] != i) ==> (L[x] == x);
   ensures (L[x] != i) ==> s != old(s);
   ensures (L[x] != i) ==> s == s-{a};
 { 
