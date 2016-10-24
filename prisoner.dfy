@@ -33,8 +33,8 @@ method benda(L:array<int>, v0:int, v1:int) returns (x:int, y:int)
 	invariant x !in L[..] && y !in L[..] && x != y;
 	invariant y == v0 ==> x == v1;
 	invariant x == v0 ==> y == v1;
-	invariant i >= L.Length ==> (x == v0 && y == v1);
 	invariant i < L.Length ==> {i} + (set z | i < z < L.Length) == (set z | i < z < L.Length);
+	invariant i >= L.Length ==> x !in L[..] && y !in L[..] && (x == v0 && y == v1);
 	
     {       
     if (L[i] != i) { // if mind of i does not match with body i
